@@ -8,6 +8,7 @@ import { exportPNG, exportPDF } from '../utils/exportViewer';
 import { importFile } from '../utils/importFile';
 import { Logo } from './Logo';
 import { GoogleDriveSettingsModal } from './GoogleDriveSettingsModal';
+import { isGoogleDriveConfigured } from '../utils/googleDrive';
 import { useAutoSaveStatus } from '../hooks/useAutoSaveStatus';
 
 const ACCEPTED_TYPES = '.txt,.md,.xml,.pdf,.png,.jpg,.jpeg,.docx,.mqda';
@@ -626,25 +627,29 @@ export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
           icon={<MapIcon />}
         />
 
-        <div className="w-px h-6 bg-white/30 mx-1" />
+        {isGoogleDriveConfigured() && (
+          <>
+            <div className="w-px h-6 bg-white/30 mx-1" />
 
-        {/* Cloud Sync button */}
-        <div className="relative group">
-          <button
-            onClick={() => setShowDriveSettings(true)}
-            className="relative flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/25 hover:border-white/35 active:scale-95 transition-all shadow-sm hover:shadow-md"
-          >
-            <span className="flex-shrink-0 opacity-90 group-hover:opacity-100 transition-opacity">
-              <CloudSyncIcon />
-            </span>
-            <span>{t('header.cloudSync')}</span>
-            {autoSaveStatus !== 'idle' && <StatusDot status={autoSaveStatus} />}
-          </button>
-          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 text-xs rounded-lg bg-gray-900/90 text-white opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 shadow-lg z-50 w-56 text-center leading-relaxed">
-            {t('driveSync.syncTooltip')}
-            <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900/90 rotate-45" />
-          </div>
-        </div>
+            {/* Cloud Sync button */}
+            <div className="relative group">
+              <button
+                onClick={() => setShowDriveSettings(true)}
+                className="relative flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/25 hover:border-white/35 active:scale-95 transition-all shadow-sm hover:shadow-md"
+              >
+                <span className="flex-shrink-0 opacity-90 group-hover:opacity-100 transition-opacity">
+                  <CloudSyncIcon />
+                </span>
+                <span>{t('header.cloudSync')}</span>
+                {autoSaveStatus !== 'idle' && <StatusDot status={autoSaveStatus} />}
+              </button>
+              <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 text-xs rounded-lg bg-gray-900/90 text-white opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 shadow-lg z-50 w-56 text-center leading-relaxed">
+                {t('driveSync.syncTooltip')}
+                <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900/90 rotate-45" />
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="w-px h-6 bg-white/30 mx-1" />
 
