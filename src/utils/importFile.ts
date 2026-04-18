@@ -2,10 +2,11 @@ import mammoth from 'mammoth';
 import { nextFileId } from '../store/useAppStore';
 import type { FileEntry } from '../store/useAppStore';
 import { loadProject, clearSavedFileHandle } from './fileIO';
+import { importQdpx } from './importQdpx';
 
 const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg']);
 const BINARY_EXTS = new Set(['png', 'jpg', 'jpeg', 'pdf']);
-const SUPPORTED_EXTS = new Set(['txt', 'md', 'xml', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'mqda']);
+const SUPPORTED_EXTS = new Set(['txt', 'md', 'xml', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'mqda', 'qdpx']);
 
 function readAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -38,6 +39,19 @@ export async function importFile(
       return { type: 'project', data };
     } catch {
       alert('Failed to load project file.');
+      return null;
+    }
+  }
+
+  if (ext === 'qdpx') {
+    try {
+      clearSavedFileHandle();
+      const data = await importQdpx(file);
+      return { type: 'project', data };
+    } catch (err) {
+      alert(
+        `Failed to import REFI-QDA (.qdpx) file.\n${err instanceof Error ? err.message : ''}`,
+      );
       return null;
     }
   }

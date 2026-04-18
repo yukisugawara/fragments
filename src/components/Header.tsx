@@ -11,7 +11,7 @@ import { GoogleDriveSettingsModal } from './GoogleDriveSettingsModal';
 import { isGoogleDriveConfigured } from '../utils/googleDrive';
 import { useAutoSaveStatus } from '../hooks/useAutoSaveStatus';
 
-const ACCEPTED_TYPES = '.txt,.md,.xml,.pdf,.png,.jpg,.jpeg,.docx,.mqda';
+const ACCEPTED_TYPES = '.txt,.md,.xml,.pdf,.png,.jpg,.jpeg,.docx,.mqda,.qdpx';
 
 interface HeaderProps {
   onOpenMap: () => void;
