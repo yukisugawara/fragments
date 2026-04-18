@@ -11,6 +11,7 @@ export function FilesPanel() {
   const removeFile = useAppStore((s) => s.removeFile);
   const addFile = useAppStore((s) => s.addFile);
   const restoreState = useAppStore((s) => s.restoreState);
+  const addCodes = useAppStore((s) => s.addCodes);
 
   const [filesCollapsed, setFilesCollapsed] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -40,10 +41,17 @@ export function FilesPanel() {
           restoreState(result.data);
         } else if (result?.type === 'file') {
           addFile(result.entry);
+        } else if (result?.type === 'codebook') {
+          const targetFileId = useAppStore.getState().activeFileId;
+          if (!targetFileId) {
+            alert('コードブック (.qdc) を取り込むには、先にファイルを開いてください。');
+          } else {
+            addCodes(result.codes.map((c) => ({ ...c, fileId: targetFileId })));
+          }
         }
       }
     },
-    [addFile, restoreState],
+    [addFile, restoreState, addCodes],
   );
 
   return (

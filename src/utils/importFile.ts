@@ -1,12 +1,15 @@
 import mammoth from 'mammoth';
 import { nextFileId } from '../store/useAppStore';
-import type { FileEntry } from '../store/useAppStore';
+import type { Code, FileEntry } from '../store/useAppStore';
 import { loadProject, clearSavedFileHandle } from './fileIO';
 import { importQdpx } from './importQdpx';
+import { importQdc } from './importQdc';
 
 const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg']);
 const BINARY_EXTS = new Set(['png', 'jpg', 'jpeg', 'pdf']);
-const SUPPORTED_EXTS = new Set(['txt', 'md', 'xml', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'mqda', 'qdpx']);
+const SUPPORTED_EXTS = new Set([
+  'txt', 'md', 'xml', 'pdf', 'png', 'jpg', 'jpeg', 'docx', 'mqda', 'qdpx', 'qdc',
+]);
 
 function readAsDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -26,6 +29,7 @@ export async function importFile(
 ): Promise<
   | { type: 'file'; entry: FileEntry }
   | { type: 'project'; data: ReturnType<typeof loadProject> extends Promise<infer T> ? T : never }
+  | { type: 'codebook'; codes: Code[] }
   | null
 > {
   const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
@@ -51,6 +55,18 @@ export async function importFile(
     } catch (err) {
       alert(
         `Failed to import REFI-QDA (.qdpx) file.\n${err instanceof Error ? err.message : ''}`,
+      );
+      return null;
+    }
+  }
+
+  if (ext === 'qdc') {
+    try {
+      const codes = await importQdc(file);
+      return { type: 'codebook', codes };
+    } catch (err) {
+      alert(
+        `Failed to import REFI-QDA codebook (.qdc).\n${err instanceof Error ? err.message : ''}`,
       );
       return null;
     }

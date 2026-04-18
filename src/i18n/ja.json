@@ -11,7 +11,7 @@
     "categorymap": "カテゴリマップ",
     "memomap": "メモマップ",
     "language": "言語",
-    "importTooltip": "対応形式: .txt .md .xml .pdf .png .jpg .docx .mqda",
+    "importTooltip": "対応形式: .txt .md .xml .pdf .png .jpg .docx .mqda .qdpx .qdc",
     "saveTooltip": "プロジェクトを上書き保存（初回は名前を付けて保存）",
     "saveAs": "別名保存",
     "saveAsTooltip": "保存先フォルダを選んで保存",
@@ -169,6 +169,7 @@
     "formats": "対応ファイル形式",
     "formatImport": "読み込み:",
     "formatExport": "出力:",
+    "formatRefiQda": "REFI-QDA 連携: .qdpx は MAXQDA / NVivo / ATLAS.ti などから書き出したテキスト・コード体系・コーディング範囲をまとめて取り込みます。.qdc はコードブックのみを現在アクティブなファイルに追加します。",
     "saveResume": "作業の保存と再開",
     "saveResumeDesc": "作業を中断するときは「保存」ボタンで .mqda ファイルをダウンロードしてください。次回 Import から .mqda ファイルを読み込めば、すべてのファイル・コード・メモが復元され、作業を再開できます。"
   },

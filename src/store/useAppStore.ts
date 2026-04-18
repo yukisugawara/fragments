@@ -89,6 +89,7 @@ export interface AppState {
   removeFile: (fileId: string) => void;
   setActiveFileId: (fileId: string) => void;
   addCode: (code: Code) => void;
+  addCodes: (codes: Code[]) => void;
   removeCode: (id: string) => void;
   addMemo: (memo: Memo) => void;
   updateMemo: (id: string, content: string) => void;
@@ -192,6 +193,26 @@ export const useAppStore = create<AppState>((set) => ({
       );
       const maxOrder = siblings.length > 0 ? Math.max(...siblings.map((c) => c.order)) : -1;
       return { codes: [...state.codes, { ...code, order: maxOrder + 1 }] };
+    }),
+
+  addCodes: (newCodes) =>
+    set((state) => {
+      // Shift root-level orders per fileId so imported roots sit after existing ones.
+      const rootMaxOrder = new Map<string, number>();
+      for (const c of state.codes) {
+        if (c.parentId === null) {
+          const prev = rootMaxOrder.get(c.fileId) ?? -1;
+          if (c.order > prev) rootMaxOrder.set(c.fileId, c.order);
+        }
+      }
+      const shifted = newCodes.map((c) => {
+        if (c.parentId === null) {
+          const base = (rootMaxOrder.get(c.fileId) ?? -1) + 1;
+          return { ...c, order: c.order + base };
+        }
+        return c;
+      });
+      return { codes: [...state.codes, ...shifted] };
     }),
 
   removeCode: (id) =>

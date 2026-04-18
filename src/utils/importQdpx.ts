@@ -5,11 +5,11 @@ import type { Code, FileEntry, ProjectData } from '../store/useAppStore';
 const BINARY_SOURCE_EXTS = new Set(['png', 'jpg', 'jpeg', 'pdf']);
 
 let idCounter = 0;
-function nextLocalId(prefix: 'code' | 'group'): string {
+export function nextLocalId(prefix: 'code' | 'group'): string {
   return `${prefix}-qdpx-${++idCounter}-${Date.now()}`;
 }
 
-interface CodeInfo {
+export interface CodeInfo {
   guid: string;
   name: string;
   color: string;
@@ -24,11 +24,14 @@ function getChildrenByLocalName(parent: Element, localName: string): Element[] {
   return result;
 }
 
-function parseCodeBook(doc: Document): Map<string, CodeInfo> {
+/**
+ * Walks the first `<Codes>` element in the document. Works for both:
+ * - project.qde (Project > CodeBook > Codes)
+ * - *.qdc codebook (CodeBook > Codes, or Codes as root)
+ */
+export function parseCodeBook(doc: Document): Map<string, CodeInfo> {
   const map = new Map<string, CodeInfo>();
-  const codeBooks = doc.getElementsByTagNameNS('*', 'CodeBook');
-  if (codeBooks.length === 0) return map;
-  const codesRoots = codeBooks[0].getElementsByTagNameNS('*', 'Codes');
+  const codesRoots = doc.getElementsByTagNameNS('*', 'Codes');
   if (codesRoots.length === 0) return map;
 
   function walk(el: Element, parentGuid: string | null) {
@@ -117,7 +120,7 @@ function mimeForExt(ext: string): string {
  * codebook hierarchy, so that coded segments can be parented under them.
  * Returns a map from code guid → our group Code id.
  */
-function buildGroupTreeForFile(
+export function buildGroupTreeForFile(
   codeMap: Map<string, CodeInfo>,
   fileId: string,
   codesOut: Code[],

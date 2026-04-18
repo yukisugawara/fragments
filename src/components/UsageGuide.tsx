@@ -190,7 +190,7 @@ export function UsageGuide() {
                 <p className="text-xs text-gray-700 dark:text-gray-200 leading-relaxed">
                   <span className="font-semibold">{t('usage.formatImport')}</span>{' '}
                   <code className="px-1 py-0.5 rounded bg-violet-100 dark:bg-violet-800/40 text-[11px] text-violet-700 dark:text-violet-300">
-                    .txt .md .xml .pdf .png .jpg .docx .mqda
+                    .txt .md .xml .pdf .png .jpg .docx .mqda .qdpx .qdc
                   </code>
                 </p>
                 <p className="text-xs text-gray-700 dark:text-gray-200 leading-relaxed">
@@ -198,6 +198,9 @@ export function UsageGuide() {
                   <code className="px-1 py-0.5 rounded bg-violet-100 dark:bg-violet-800/40 text-[11px] text-violet-700 dark:text-violet-300">
                     .mqda .csv .png
                   </code>
+                </p>
+                <p className="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
+                  {t('usage.formatRefiQda')}
                 </p>
               </div>
             </Section>

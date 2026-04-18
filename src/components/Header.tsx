@@ -11,7 +11,7 @@ import { GoogleDriveSettingsModal } from './GoogleDriveSettingsModal';
 import { isGoogleDriveConfigured } from '../utils/googleDrive';
 import { useAutoSaveStatus } from '../hooks/useAutoSaveStatus';
 
-const ACCEPTED_TYPES = '.txt,.md,.xml,.pdf,.png,.jpg,.jpeg,.docx,.mqda,.qdpx';
+const ACCEPTED_TYPES = '.txt,.md,.xml,.pdf,.png,.jpg,.jpeg,.docx,.mqda,.qdpx,.qdc';
 
 interface HeaderProps {
   onOpenMap: () => void;
@@ -485,6 +485,13 @@ export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
       store.restoreState(result.data);
     } else if (result?.type === 'file') {
       store.addFile(result.entry);
+    } else if (result?.type === 'codebook') {
+      const targetFileId = store.activeFileId;
+      if (!targetFileId) {
+        alert('コードブック (.qdc) を取り込むには、先にファイルを開いてください。');
+      } else {
+        store.addCodes(result.codes.map((c) => ({ ...c, fileId: targetFileId })));
+      }
     }
     e.target.value = '';
   };

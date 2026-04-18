@@ -11,7 +11,7 @@
     "categorymap": "Category Map",
     "memomap": "Memo Map",
     "language": "Language",
-    "importTooltip": "Supported: .txt .md .xml .pdf .png .jpg .docx .mqda",
+    "importTooltip": "Supported: .txt .md .xml .pdf .png .jpg .docx .mqda .qdpx .qdc",
     "saveTooltip": "Overwrite save (Save As on first save)",
     "saveAs": "Save As",
     "saveAsTooltip": "Choose folder and save as .mqda",
@@ -169,6 +169,7 @@
     "formats": "Supported File Formats",
     "formatImport": "Import:",
     "formatExport": "Export:",
+    "formatRefiQda": "REFI-QDA interop: .qdpx brings in text sources + codebook + coding segments exported from MAXQDA / NVivo / ATLAS.ti. .qdc imports a codebook into the currently active file.",
     "saveResume": "Save & Resume",
     "saveResumeDesc": "To pause your work, click Save to download a .mqda file. Next time, import the .mqda file via the Import button to restore all files, codes, and memos and resume where you left off."
   },
