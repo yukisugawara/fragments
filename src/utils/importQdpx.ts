@@ -124,6 +124,7 @@ export function buildGroupTreeForFile(
   codeMap: Map<string, CodeInfo>,
   fileId: string,
   codesOut: Code[],
+  onlyGuids?: Set<string>,
 ): Map<string, string> {
   const guidToGroupId = new Map<string, string>();
   const orderCounter = new Map<string | null, number>();
@@ -169,7 +170,8 @@ export function buildGroupTreeForFile(
     return groupId;
   }
 
-  for (const guid of codeMap.keys()) ensure(guid);
+  const guids = onlyGuids ?? new Set(codeMap.keys());
+  for (const guid of guids) ensure(guid);
   return guidToGroupId;
 }
 
@@ -242,9 +244,31 @@ async function buildFile(
   return null;
 }
 
+function collectUsedGuids(sourceEl: Element, codeMap: Map<string, CodeInfo>): Set<string> {
+  const direct = new Set<string>();
+  const selections = sourceEl.getElementsByTagNameNS('*', 'PlainTextSelection');
+  for (const sel of Array.from(selections)) {
+    const refs = sel.getElementsByTagNameNS('*', 'CodeRef');
+    for (const ref of Array.from(refs)) {
+      const g = ref.getAttribute('targetGUID') ?? ref.getAttribute('targetGuid');
+      if (g) direct.add(g);
+    }
+  }
+  const withAncestors = new Set<string>();
+  for (const guid of direct) {
+    let cur: string | null = guid;
+    while (cur && !withAncestors.has(cur)) {
+      withAncestors.add(cur);
+      cur = codeMap.get(cur)?.parentGuid ?? null;
+    }
+  }
+  return withAncestors;
+}
+
 function extractTextSelections(
   sourceEl: Element,
   fileId: string,
+  sourceText: string,
   guidToGroupId: Map<string, string>,
   codeMap: Map<string, CodeInfo>,
   codesOut: Code[],
@@ -262,6 +286,8 @@ function extractTextSelections(
     const end = parseInt(sel.getAttribute('endPosition') ?? '0', 10);
     if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) continue;
 
+    const snippet = sourceText.slice(start, end).trim();
+
     const refs = sel.getElementsByTagNameNS('*', 'CodeRef');
     for (const ref of Array.from(refs)) {
       const targetGuid = ref.getAttribute('targetGUID') ?? ref.getAttribute('targetGuid');
@@ -271,7 +297,7 @@ function extractTextSelections(
       const info = codeMap.get(targetGuid);
       codesOut.push({
         id: nextLocalId('code'),
-        text: info?.name ?? '(code)',
+        text: snippet || info?.name || '(code)',
         color: info?.color ?? '#9CA3AF',
         parentId,
         order: nextOrderUnder(parentId),
@@ -321,8 +347,16 @@ export async function importQdpx(file: File): Promise<ProjectData> {
     files.push(built.entry);
 
     if (built.kind === 'text') {
-      const guidToGroupId = buildGroupTreeForFile(codeMap, built.entry.id, codes);
-      extractTextSelections(sourceEl, built.entry.id, guidToGroupId, codeMap, codes);
+      const usedGuids = collectUsedGuids(sourceEl, codeMap);
+      const guidToGroupId = buildGroupTreeForFile(codeMap, built.entry.id, codes, usedGuids);
+      extractTextSelections(
+        sourceEl,
+        built.entry.id,
+        built.entry.fileContent,
+        guidToGroupId,
+        codeMap,
+        codes,
+      );
     }
     // Non-text sources: codebook selections for them (PDFSelection, PictureSelection)
     // use coordinate/page offsets that don't translate cleanly to our current model,
