@@ -139,7 +139,7 @@ export function FragmentEditor() {
         </button>
       </div>
       <div
-        className={`relative flex-1 overflow-hidden ${dragOver ? 'ring-2 ring-violet-400 ring-inset' : ''}`}
+        className={`relative flex-1 min-h-0 overflow-hidden ${dragOver ? 'ring-2 ring-violet-400 ring-inset' : ''}`}
         onDragOver={(e) => {
           if (e.dataTransfer.types.includes('Files')) {
             e.preventDefault();
