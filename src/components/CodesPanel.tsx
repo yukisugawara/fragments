@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore, MARKER_COLORS } from '../store/useAppStore';
 import type { Code } from '../store/useAppStore';
@@ -42,6 +42,7 @@ export function CodesPanel() {
   const { t } = useTranslation();
   const allCodes = useAppStore((s) => s.codes);
   const activeFileId = useAppStore((s) => s.activeFileId);
+  const setActiveFileId = useAppStore((s) => s.setActiveFileId);
   const selectedCodeId = useAppStore((s) => s.selectedCodeId);
   const setSelectedCodeId = useAppStore((s) => s.setSelectedCodeId);
   const removeCode = useAppStore((s) => s.removeCode);
@@ -49,8 +50,42 @@ export function CodesPanel() {
   const moveCode = useAppStore((s) => s.moveCode);
   const updateCodeText = useAppStore((s) => s.updateCodeText);
 
-  // Filter codes by active file
-  const codes = allCodes.filter((c) => c.fileId === activeFileId);
+  // Show all codes across every file. Group/category nodes with identical
+  // text are merged into a single representative so the tree doesn't repeat
+  // "生態的変化 / 生業の変容 / …" once per file.
+  const codes = useMemo(() => {
+    const out: Code[] = [];
+    const groupRepByText = new Map<string, Code>();
+    const groupIdRemap = new Map<string, string>();
+    for (const c of allCodes) {
+      if (isGroupNode(c)) {
+        const rep = groupRepByText.get(c.text);
+        if (!rep) {
+          groupRepByText.set(c.text, c);
+          out.push(c);
+        }
+        groupIdRemap.set(c.id, groupRepByText.get(c.text)!.id);
+      }
+    }
+    for (const c of allCodes) {
+      if (!isGroupNode(c)) {
+        const newParent = c.parentId && groupIdRemap.has(c.parentId)
+          ? groupIdRemap.get(c.parentId)!
+          : c.parentId;
+        out.push(newParent !== c.parentId ? { ...c, parentId: newParent } : c);
+      }
+    }
+    return out;
+  }, [allCodes]);
+  const leafCount = codes.filter((c) => !isGroupNode(c)).length;
+
+  const handleSelectCode = useCallback((id: string) => {
+    setSelectedCodeId(id);
+    const code = allCodes.find((c) => c.id === id);
+    if (code && code.fileId && code.fileId !== activeFileId && !isGroupNode(code)) {
+      setActiveFileId(code.fileId);
+    }
+  }, [allCodes, activeFileId, setActiveFileId, setSelectedCodeId]);
 
   const [colorPickerCodeId, setColorPickerCodeId] = useState<string | null>(null);
   const colorPickerRef = useRef<HTMLDivElement>(null);
@@ -221,7 +256,7 @@ export function CodesPanel() {
         onClick={() => setCodesCollapsed((v) => !v)}
       >
         <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide">
-          {t('leftPane.codes')} ({codes.length})
+          {t('leftPane.codes')} ({leafCount})
         </h2>
         <span className="text-xs text-gray-400 dark:text-gray-500 transition-transform" style={{ transform: codesCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}>
           ▼
@@ -247,7 +282,7 @@ export function CodesPanel() {
                   depth={0}
                   codes={codes}
                   selectedCodeId={selectedCodeId}
-                  setSelectedCodeId={setSelectedCodeId}
+                  setSelectedCodeId={handleSelectCode}
                   removeCode={removeCode}
                   updateCodeColor={updateCodeColor}
                   updateCodeText={updateCodeText}
@@ -353,7 +388,10 @@ function TreeNode({
         onDragOver={(e) => onDragOver(e, code.id)}
         onDrop={(e) => onDrop(e, code.id)}
         onDragEnd={onDragEnd}
-        onClick={() => setSelectedCodeId(code.id)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedCodeId(code.id);
+        }}
         className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-sm cursor-grab active:cursor-grabbing transition-all ${
           selectedCodeId === code.id
             ? 'bg-gradient-to-r from-violet-100 to-pink-50 dark:from-violet-800/30 dark:to-pink-900/20 ring-1 ring-violet-300 dark:ring-violet-600 shadow-sm'

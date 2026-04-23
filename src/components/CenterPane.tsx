@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore, MARKER_COLORS } from '../store/useAppStore';
 import type { Code } from '../store/useAppStore';
@@ -63,9 +63,11 @@ interface CodeBar {
   column: number;
 }
 
-const BAR_WIDTH = 54;
 const BAR_GAP = 3;
 const GUTTER_PAD = 4;
+const DEFAULT_BAR_WIDTH = 54;
+const MIN_BAR_WIDTH = 36;
+const MAX_BAR_WIDTH = 360;
 
 export function CenterPane() {
   const { t } = useTranslation();
@@ -93,7 +95,14 @@ export function CenterPane() {
   const fileName = activeFile?.fileName ?? null;
   const fileType = activeFile?.fileType ?? null;
 
-  const codes = allCodes.filter((c) => c.fileId === activeFileId);
+  // Stable reference: only change when codes for this file actually change.
+  // Without this memo, the filter creates a fresh array every render, which
+  // causes the measure effect (deps include `codes`) to re-run on every
+  // setCodeBars → re-render cycle and produces a visible flicker.
+  const codes = useMemo(
+    () => allCodes.filter((c) => c.fileId === activeFileId),
+    [allCodes, activeFileId],
+  );
 
   const isImage = fileType && IMAGE_EXTS.has(fileType);
   const isPdf = fileType === 'pdf';
@@ -115,6 +124,10 @@ export function CenterPane() {
 
   // Gutter bar positions
   const [codeBars, setCodeBars] = useState<CodeBar[]>([]);
+
+  // User-adjustable column width (drag handle on right edge of gutter)
+  const [barWidth, setBarWidth] = useState(DEFAULT_BAR_WIDTH);
+  const [resizing, setResizing] = useState(false);
 
   // Measure code positions after render
   useEffect(() => {
@@ -203,7 +216,22 @@ export function CenterPane() {
         bars[i].column = col;
       }
 
-      setCodeBars(bars);
+      setCodeBars((prev) => {
+        if (prev.length !== bars.length) return bars;
+        for (let i = 0; i < bars.length; i++) {
+          const a = prev[i];
+          const b = bars[i];
+          if (
+            a.codeId !== b.codeId ||
+            a.column !== b.column ||
+            Math.abs(a.top - b.top) > 0.5 ||
+            Math.abs(a.height - b.height) > 0.5
+          ) {
+            return bars;
+          }
+        }
+        return prev;
+      });
     };
 
     const raf = requestAnimationFrame(measure);
@@ -225,8 +253,32 @@ export function CenterPane() {
 
   const maxColumn = codeBars.length > 0 ? Math.max(...codeBars.map((b) => b.column)) : 0;
   const gutterWidth = showGutter
-    ? (maxColumn + 1) * (BAR_WIDTH + BAR_GAP) + GUTTER_PAD * 2
+    ? (maxColumn + 1) * (barWidth + BAR_GAP) + GUTTER_PAD * 2
     : 0;
+
+  // Gutter column resize handle
+  useEffect(() => {
+    if (!resizing) return;
+    const onMove = (e: MouseEvent) => {
+      if (!gutterRef.current) return;
+      const rect = gutterRef.current.getBoundingClientRect();
+      const cols = maxColumn + 1;
+      const rawTotal = e.clientX - rect.left;
+      const next = (rawTotal - GUTTER_PAD * 2) / cols - BAR_GAP;
+      setBarWidth(Math.max(MIN_BAR_WIDTH, Math.min(MAX_BAR_WIDTH, next)));
+    };
+    const onUp = () => setResizing(false);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [resizing, maxColumn]);
 
   const handleMouseUp = useCallback(() => {
     if (!fileContent || !contentRef.current || !isText || !activeFileId) return;
@@ -279,15 +331,14 @@ export function CenterPane() {
     >
       {codeBars.map((bar) => {
         const isSelected = selectedCodeId === bar.codeId;
-        const label = bar.text.length > 7 ? bar.text.slice(0, 7) + '…' : bar.text;
         return (
           <div
             key={bar.codeId}
             className="absolute group/bar"
             style={{
-              left: GUTTER_PAD + bar.column * (BAR_WIDTH + BAR_GAP),
+              left: GUTTER_PAD + bar.column * (barWidth + BAR_GAP),
               top: bar.top,
-              width: BAR_WIDTH,
+              width: barWidth,
               height: bar.height,
             }}
           >
@@ -299,23 +350,37 @@ export function CenterPane() {
               }`}
               style={{ backgroundColor: bar.color }}
             />
-            {/* Code name label */}
+            {/* Code name label — wraps within column width */}
             <div
               onClick={() => setSelectedCodeId(bar.codeId)}
-              className={`absolute left-1 top-0 cursor-pointer select-none truncate rounded px-1 py-px text-[9px] leading-tight font-semibold text-white/90 transition-opacity ${
+              className={`absolute left-1 top-0 cursor-pointer select-none rounded px-1 py-px text-[9px] leading-tight font-semibold text-white/90 transition-opacity break-words whitespace-normal ${
                 isSelected ? 'opacity-100 ring-1 ring-gray-700 dark:ring-gray-300' : 'opacity-75 hover:opacity-100'
               }`}
               style={{
                 backgroundColor: bar.color,
-                maxWidth: BAR_WIDTH - 6,
+                width: barWidth - 6,
               }}
               title={bar.text}
             >
-              {label}
+              {bar.text}
             </div>
           </div>
         );
       })}
+      {/* Draggable divider on the right edge of the gutter */}
+      <div
+        onMouseDown={(e) => {
+          e.preventDefault();
+          setResizing(true);
+        }}
+        onDoubleClick={() => setBarWidth(DEFAULT_BAR_WIDTH)}
+        className={`absolute top-0 right-0 h-full w-1.5 -mr-0.5 cursor-col-resize group/divider ${
+          resizing ? 'bg-violet-400/60' : 'hover:bg-violet-300/50'
+        }`}
+        title="ドラッグで幅調整・ダブルクリックでリセット"
+      >
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-violet-200/60 dark:bg-violet-700/40 group-hover/divider:bg-violet-400" />
+      </div>
     </div>
   );
 

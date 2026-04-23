@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 20 20">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F7F2FF" />
+      <stop offset="1" stop-color="#E6DCFA" />
+    </radialGradient>
+  </defs>
+  <circle cx="0" cy="0" r="9.5" fill="url(#bg)" stroke="#C4B0FC" stroke-width="0.6" />
+  <g fill="none" stroke="#8B7FE3" stroke-width="1" stroke-linecap="round">
+    <path d="M 2.060 -5.099 A 5.5 5.5 0 0 1 5.099 -2.060" />
+    <path d="M 5.099 2.060 A 5.5 5.5 0 0 1 2.060 5.099" />
+    <path d="M -2.060 5.099 A 5.5 5.5 0 0 1 -5.099 2.060" />
+    <path d="M -5.099 -2.060 A 5.5 5.5 0 0 1 -2.060 -5.099" />
+  </g>
+  <g fill="#6F66D3">
+    <circle cx="0" cy="-5.5" r="2.1" />
+    <circle cx="5.5" cy="0" r="2.1" />
+    <circle cx="0" cy="5.5" r="2.1" />
+    <circle cx="-5.5" cy="0" r="2.1" />
+  </g>
+</svg>

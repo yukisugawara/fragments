@@ -34,7 +34,7 @@ function HeaderButton({
     <div className="relative group">
       <button
         onClick={onClick}
-        className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/25 hover:border-white/35 active:scale-95 transition-all shadow-sm hover:shadow-md"
+        className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium bg-white/80 dark:bg-dpurple-800/70 backdrop-blur-sm ring-[0.5px] ring-black/10 dark:ring-white/15 rounded-full hover:bg-white hover:shadow-md dark:hover:bg-dpurple-700 active:scale-95 transition-all text-violet-800 dark:text-violet-50"
       >
         <span className="flex-shrink-0 opacity-90 group-hover:opacity-100 transition-opacity">
           {icon}
@@ -119,115 +119,6 @@ function CloudSyncIcon() {
       <path d="M8 10V15" />
       <path d="M6 12L8 10L10 12" />
     </svg>
-  );
-}
-
-/* --- Sample data definitions --- */
-
-interface SampleFile {
-  path: string;     // relative to public/
-  fileName: string;
-  fileType: string;  // MIME type
-}
-
-interface SampleItem {
-  id: string;
-  labelKey: string;        // i18n key under "samples."
-  descriptionKey: string;  // i18n key under "samples."
-  files: SampleFile[];
-}
-
-const SAMPLES: SampleItem[] = [
-  {
-    id: 'roomba',
-    labelKey: 'samples.roomba',
-    descriptionKey: 'samples.roombaDesc',
-    files: [
-      { path: 'samples/roomba_kawaii_35tweets_sample.txt', fileName: 'roomba_kawaii_35tweets_sample.txt', fileType: 'text/plain' },
-    ],
-  },
-  {
-    id: 'instagram-career',
-    labelKey: 'samples.instagramCareer',
-    descriptionKey: 'samples.instagramCareerDesc',
-    files: [
-      { path: 'samples/instagram_career_1_cover.png', fileName: '1_cover.png', fileType: 'image/png' },
-      { path: 'samples/instagram_career_2_profile.png', fileName: '2_profile.png', fileType: 'image/png' },
-      { path: 'samples/instagram_career_3_why_grad_school.png', fileName: '3_why_grad_school.png', fileType: 'image/png' },
-      { path: 'samples/instagram_career_4_why_osaka_u.png', fileName: '4_why_osaka_u.png', fileType: 'image/png' },
-      { path: 'samples/instagram_career_5_future_career.png', fileName: '5_future_career.png', fileType: 'image/png' },
-      { path: 'samples/instagram_career_6_current_efforts.png', fileName: '6_current_efforts.png', fileType: 'image/png' },
-      { path: 'samples/instagram_career_7_thankyou.png', fileName: '7_thankyou.png', fileType: 'image/png' },
-    ],
-  },
-];
-
-function SampleIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 2.5H10L13 5.5V13.5C13 14.05 12.55 14.5 12 14.5H3C2.45 14.5 2 14.05 2 13.5V3.5C2 2.95 2.45 2.5 3 2.5Z" />
-      <path d="M10 2.5V5.5H13" />
-      <path d="M5 8.5H10" />
-      <path d="M5 11H8" />
-    </svg>
-  );
-}
-
-function SampleDropdown({
-  onSelect,
-}: {
-  onSelect: (sample: SampleItem) => void;
-}) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  const close = useCallback(() => setOpen(false), []);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) close();
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, [open, close]);
-
-  return (
-    <div ref={ref} className="relative group">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/25 hover:border-white/35 active:scale-95 transition-all shadow-sm hover:shadow-md"
-      >
-        <span className="flex-shrink-0 opacity-90 group-hover:opacity-100 transition-opacity">
-          <SampleIcon />
-        </span>
-        <span>{t('header.sample')}</span>
-      </button>
-      {!open && (
-        <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 text-xs rounded-lg bg-gray-900/90 text-white whitespace-nowrap opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 shadow-lg z-50">
-          {t('header.sampleTooltip')}
-          <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900/90 rotate-45" />
-        </div>
-      )}
-      {open && (
-        <div className="absolute left-0 top-full mt-1.5 min-w-[260px] bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-600/30 py-1 z-50">
-          {SAMPLES.map((sample) => (
-            <button
-              key={sample.id}
-              onClick={() => { onSelect(sample); close(); }}
-              className="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors text-left"
-            >
-              <span className="flex-shrink-0 text-gray-500 dark:text-gray-400"><SampleIcon /></span>
-              <div className="min-w-0">
-                <div className="font-medium">{t(sample.labelKey)}</div>
-                <div className="text-[10px] text-gray-400 dark:text-gray-500">{t(sample.descriptionKey)}</div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -491,17 +382,11 @@ function StatusDot({ status }: { status: string }) {
 }
 
 export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const store = useAppStore();
-  const theme = useAppStore((s) => s.theme);
-  const toggleTheme = useAppStore((s) => s.toggleTheme);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showDriveSettings, setShowDriveSettings] = useState(false);
   const autoSaveStatus = useAutoSaveStatus();
-
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === 'ja' ? 'en' : 'ja');
-  };
 
   const handleFileLoad = () => {
     fileInputRef.current?.click();
@@ -556,45 +441,6 @@ export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
     });
   };
 
-  const handleSampleSelect = async (sample: SampleItem) => {
-    try {
-      const base = import.meta.env.BASE_URL;
-      for (const file of sample.files) {
-        const url = `${base}${file.path}`.replace(/\/\//g, '/');
-        const res = await fetch(url);
-        const ext = file.fileName.split('.').pop()?.toLowerCase() ?? '';
-        const isImage = ['png', 'jpg', 'jpeg'].includes(ext);
-
-        if (isImage) {
-          const blob = await res.blob();
-          const dataUrl = await new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(blob);
-          });
-          store.addFile({
-            id: nextFileId(),
-            fileName: file.fileName,
-            fileContent: `[Image] ${file.fileName}`,
-            fileType: ext,
-            fileDataUrl: dataUrl,
-          });
-        } else {
-          const text = await res.text();
-          store.addFile({
-            id: nextFileId(),
-            fileName: file.fileName,
-            fileContent: text,
-            fileType: ext,
-            fileDataUrl: null,
-          });
-        }
-      }
-    } catch (err) {
-      console.error('Failed to load sample:', err);
-    }
-  };
-
   const handleExportCSV = () => {
     const activeFile = store.files.find((f) => f.id === store.activeFileId);
     const defaultName = activeFile?.fileName?.replace(/\.[^.]+$/, '') ?? 'export';
@@ -639,8 +485,9 @@ export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between px-4 py-2.5 bg-gradient-to-r from-violet-500 via-pink-500 to-orange-400 dark:from-dpurple-900 dark:via-violet-700 dark:to-dpurple-800 text-white shadow-lg">
-      <Logo />
+    <header className="flex items-center justify-between px-4 py-2.5 bg-gradient-to-r from-pink-100/85 via-violet-100/80 to-mint-100/85 dark:from-dpurple-800/75 dark:via-dpurple-900/70 dark:to-dpurple-800/75 backdrop-blur-xl text-violet-900 dark:text-violet-50 ring-[0.5px] ring-white/50 dark:ring-white/10 shadow-sm">
+      {/* Left-side spacer — global top-left cluster overlays this area */}
+      <div aria-hidden className="w-[300px] shrink-0" />
 
       <div className="flex items-center gap-2">
         <input
@@ -656,7 +503,6 @@ export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
           tooltip={t('header.importTooltip')}
           icon={<ImportIcon />}
         />
-        <SampleDropdown onSelect={handleSampleSelect} />
         <SaveDropdown
           onSave={handleSave}
           onSaveAs={handleSaveAs}
@@ -723,21 +569,8 @@ export function Header({ onOpenMap, onResetLayout }: HeaderProps) {
           </div>
         </div>
 
-        <div className="w-px h-6 bg-white/30 mx-1" />
-
-        <button
-          onClick={toggleTheme}
-          className="px-3 py-1.5 text-sm glass rounded-full hover:brightness-110 active:scale-95 transition-all"
-          title={theme === 'light' ? 'Dark mode' : 'Light mode'}
-        >
-          {theme === 'light' ? '☽' : '☀'}
-        </button>
-        <button
-          onClick={toggleLanguage}
-          className="px-3 py-1.5 text-sm bg-white/25 backdrop-blur-sm rounded-full hover:bg-white/35 active:scale-95 transition-all font-bold"
-        >
-          {i18n.language === 'ja' ? 'EN' : 'JA'}
-        </button>
+        {/* Theme / language toggles live in the global TopRightCluster */}
+        <div className="w-[108px] shrink-0" aria-hidden />
       </div>
       {showDriveSettings && (
         <GoogleDriveSettingsModal onClose={() => setShowDriveSettings(false)} />

@@ -1,0 +1,171 @@
+{
+  "phaseSwitcher": {
+    "aria": "フェーズ切替",
+    "phases": {
+      "p1label": "フィールドノート",
+      "p1sub": "書き留める",
+      "p2label": "つながり",
+      "p2sub": "整理する",
+      "p3label": "コーディング",
+      "p3sub": "意味を探る",
+      "p4label": "民族誌",
+      "p4sub": "書き上げる"
+    }
+  },
+  "dataMenu": {
+    "button": "データ",
+    "sections": {
+      "project": "プロジェクト",
+      "sample": "サンプル",
+      "import": "断片をファイルから追加",
+      "language": "言語",
+      "other": "その他"
+    },
+    "items": {
+      "saveProject": "プロジェクトを保存...",
+      "saveProjectDesc": "4フェーズすべてを1ファイルに書き出し",
+      "loadProject": "プロジェクトを読み込む...",
+      "loadProjectDesc": ".fragments.json を読み込んで完全復元",
+      "loadSample": "サンプルを読み込む",
+      "loadSampleDesc": "AI生成の架空データ：気候変動民族誌（42断片・26コード）",
+      "importFiles": "Markdownファイルを追加...",
+      "importFolder": "フォルダを丸ごと追加...",
+      "clear": "すべてのデータをクリア"
+    },
+    "confirm": {
+      "clear": "すべてのデータ（断片・ドキュメント・QDA）を削除します。本当によろしいですか？",
+      "loadProject": "プロジェクトを読み込むと、現在開いている断片・ドキュメント・QDAはすべて置き換えられます。\n\n続行しますか？\n（ファイル: {{name}}）"
+    },
+    "prompt": {
+      "saveName": "プロジェクトのファイル名（拡張子は自動で付きます）"
+    },
+    "toast": {
+      "projectSaved": "プロジェクトを保存しました: {{name}}",
+      "projectLoaded": "プロジェクトを読み込みました ({{summary}})",
+      "sampleLoaded": "「{{title}}」を読み込みました（断片 {{count}} 件）⚠ これはAI生成の架空データです",
+      "cleared": "すべてのデータを削除しました",
+      "loadFail": "読み込みに失敗: {{message}}",
+      "importDone": "{{imported}} 件を断片として追加しました",
+      "importSkipped": "{{count}} 件をスキップ（対応していない形式）",
+      "importErrors": "{{count}} 件でエラー",
+      "importEmpty": "対応するMarkdownファイルが見つかりませんでした"
+    },
+    "langLabel": "日本語 / English",
+    "ja": "日本語",
+    "en": "English"
+  },
+  "phase1": {
+    "newFragment": "+ 新しい断片",
+    "files": "📄 ファイル",
+    "folder": "📁 フォルダ",
+    "filesTooltip": ".mdファイルを複数選択して追加",
+    "folderTooltip": "フォルダを丸ごと追加（.md/.txt）",
+    "search": "検索...",
+    "emptyNoFragments": "まだ断片がありません。",
+    "emptyHint": "上のボタンで作成・読み込み、\nまたはサンプルで試せます。",
+    "emptyLoadSample": "📚 サンプルを読み込む",
+    "noResults": "該当する断片がありません",
+    "deleteConfirm": "「{{title}}」を削除しますか？",
+    "delete": "削除",
+    "placeholderTitle": "タイトル",
+    "placeholderBody": "断片を書く…\n\nMarkdown記法が使えます。\n[[他の断片のタイトル]] で断片どうしをリンクできます。",
+    "suggestHeader": "リンク先の候補",
+    "suggestCreateNew": "Enter で「{{title}}」を作成",
+    "suggestNewItem": "+ 「{{title}}」を新規作成",
+    "preview": "プレビュー",
+    "selectPrompt": "左のリストから断片を選ぶか、新規作成してください",
+    "backlinks": "この断片へのリンク元 ({{count}})"
+  },
+  "phase2": {
+    "emptyTitle": "まだ断片がありません",
+    "goToPhase1": "フェーズ1で断片をつくる",
+    "statusBar": "{{fragments}} 断片 / {{edges}} リンク",
+    "ghostSuffix": "(未作成)",
+    "hints": "💡 ノードをドラッグで移動。ノードの端の丸から別ノードへドラッグでリンクを作成（フェーズ1の本文にも自動反映）。クリックで該当断片を編集画面で開く。",
+    "codeLegendEmpty": "まだコーディングされていません。フェーズ3でコードを付与すると、各断片が属するカテゴリーの色で表示されます。",
+    "relayout": "再配置",
+    "relayoutTooltip": "ノードの位置を力学レイアウトで再計算（手動で動かした位置もリセット）",
+    "colorMode": {
+      "label": "色分け",
+      "uniform": "統一",
+      "code": "コード",
+      "degree": "次数",
+      "codeLegendTitle": "カテゴリー（優勢コード）",
+      "degreeLegendTitle": "リンクの次数（入＋出）",
+      "degreeHint": "リンクが多い断片ほど暖色寄りになります。ハブ（中心的な断片）を一目で見つけられます。"
+    }
+  },
+  "phase3": {
+    "importFragments": "断片から追加",
+    "importTooltip": "フェーズ1で作成した断片を分析対象として取り込む",
+    "modal": {
+      "title": "断片をQDA分析に取り込む",
+      "subtitle": "選択した断片を分析対象ファイルとして追加します",
+      "search": "検索...",
+      "alreadyImported": "（取り込み済み）",
+      "empty": "フェーズ1でまず断片をつくってください",
+      "noResults": "該当する断片がありません",
+      "importAll": "すべて取り込む（未取込のみ）",
+      "cancel": "キャンセル",
+      "importSelected": "選択した {{count}} 件を取り込む",
+      "close": "閉じる"
+    }
+  },
+  "phase4": {
+    "empty": {
+      "title": "フェーズ4：民族誌を書く",
+      "description": "バインダーでセクションを並べ替えながら、フェーズ1で書いた断片を組み合わせて長い文章を組み立てます。",
+      "createFirst": "+ 最初のドキュメントを作成"
+    },
+    "topbar": {
+      "newDocument": "+ 新規",
+      "compile": "コンパイル",
+      "delete": "削除",
+      "deleteConfirm": "ドキュメント「{{title}}」を削除しますか？",
+      "selectPrompt": "上のタブからドキュメントを選ぶか、「+ 新規」で作成してください",
+      "titlePlaceholder": "タイトル"
+    },
+    "compile": {
+      "title": "コンパイル結果",
+      "stripLinks": "[[リンク]] を通常テキストに展開する",
+      "copy": "クリップボードにコピー",
+      "download": ".md でダウンロード"
+    },
+    "binder": {
+      "title": "バインダー",
+      "addSection": "+ 節",
+      "empty": "セクションがありません。\n「+ 節」で追加しましょう。",
+      "deleteConfirm": "セクション「{{title}}」を削除しますか？",
+      "moveUp": "上へ",
+      "moveDown": "下へ",
+      "delete": "削除",
+      "hint": "ダブルクリックで改名\nセクション名: ↑↓で並べ替え",
+      "refCount": "参照している断片の数",
+      "newSection": "新しいセクション"
+    },
+    "editor": {
+      "selectPrompt": "左のバインダーからセクションを選んでください",
+      "sectionTitle": "セクション名",
+      "placeholder": "このセクションの本文を書く...\n\n右の断片ライブラリから本文を差し込んだり、\n[[タイトル]] 形式で断片への参照を埋め込めます。",
+      "referenced": "参照している断片（{{count}}）",
+      "remove": "× 外す",
+      "removeTitle": "この参照を外す"
+    },
+    "library": {
+      "title": "断片ライブラリ",
+      "search": "検索...",
+      "emptyNoFragments": "フェーズ1で断片をつくると\nここに並びます",
+      "emptyNoMatch": "該当する断片がありません",
+      "insertContent": "本文を挿入",
+      "insertContentTitle": "本文を引用として挿入",
+      "insertLink": "リンク",
+      "insertLinkTitle": "[[リンク]]として挿入",
+      "openInPhase1": "フェーズ1で開く",
+      "emptyCell": "（空）"
+    }
+  },
+  "splash": {
+    "appTitle": "fragments",
+    "tagline": "書く — 断片から、つながり、分析、執筆まで"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "phaseSwitcher": {
+    "aria": "Phase switcher",
+    "phases": {
+      "p1label": "Fieldnotes",
+      "p1sub": "capture",
+      "p2label": "Links",
+      "p2sub": "organize",
+      "p3label": "Coding",
+      "p3sub": "interpret",
+      "p4label": "Ethnography",
+      "p4sub": "write"
+    }
+  },
+  "dataMenu": {
+    "button": "Data",
+    "sections": {
+      "project": "Project",
+      "sample": "Sample",
+      "import": "Import fragments from files",
+      "language": "Language",
+      "other": "Other"
+    },
+    "items": {
+      "saveProject": "Save project...",
+      "saveProjectDesc": "Export all 4 phases as a single file",
+      "loadProject": "Load project...",
+      "loadProjectDesc": "Fully restore from a .fragments.json file",
+      "loadSample": "Load sample data",
+      "loadSampleDesc": "AI-generated fictional data: climate-change ethnography (42 fragments, 26 codes)",
+      "importFiles": "Add Markdown files...",
+      "importFolder": "Add an entire folder...",
+      "clear": "Clear all data"
+    },
+    "confirm": {
+      "clear": "This will delete all data (fragments, documents, QDA). Are you sure?",
+      "loadProject": "Loading a project will replace all current data.\n\nContinue?\n(File: {{name}})"
+    },
+    "prompt": {
+      "saveName": "Project file name (extension is added automatically)"
+    },
+    "toast": {
+      "projectSaved": "Project saved: {{name}}",
+      "projectLoaded": "Project loaded ({{summary}})",
+      "sampleLoaded": "Loaded \"{{title}}\" ({{count}} fragments) ⚠ AI-generated fictional data",
+      "cleared": "All data has been cleared",
+      "loadFail": "Load failed: {{message}}",
+      "importDone": "Added {{imported}} fragments",
+      "importSkipped": "{{count}} files skipped (unsupported format)",
+      "importErrors": "{{count}} errors",
+      "importEmpty": "No compatible Markdown files found"
+    },
+    "langLabel": "日本語 / English",
+    "ja": "日本語",
+    "en": "English"
+  },
+  "phase1": {
+    "newFragment": "+ New fragment",
+    "files": "📄 Files",
+    "folder": "📁 Folder",
+    "filesTooltip": "Select multiple .md files to import",
+    "folderTooltip": "Import a whole folder (.md / .txt)",
+    "search": "Search...",
+    "emptyNoFragments": "No fragments yet.",
+    "emptyHint": "Create one above, import files,\nor try the sample.",
+    "emptyLoadSample": "📚 Load sample",
+    "noResults": "No matching fragments",
+    "deleteConfirm": "Delete \"{{title}}\"?",
+    "delete": "Delete",
+    "placeholderTitle": "Title",
+    "placeholderBody": "Write your fragment…\n\nMarkdown is supported.\nUse [[another fragment's title]] to link fragments together.",
+    "suggestHeader": "Link suggestions",
+    "suggestCreateNew": "Press Enter to create \"{{title}}\"",
+    "suggestNewItem": "+ Create new \"{{title}}\"",
+    "preview": "Preview",
+    "selectPrompt": "Select a fragment from the list on the left, or create a new one",
+    "backlinks": "Linked from ({{count}})"
+  },
+  "phase2": {
+    "emptyTitle": "No fragments yet",
+    "goToPhase1": "Create fragments in Phase 1",
+    "statusBar": "{{fragments}} fragments / {{edges}} links",
+    "ghostSuffix": "(not created)",
+    "hints": "💡 Drag nodes to rearrange. Drag from a node's edge handle to another node to create a link (auto-syncs to the fragment body in Phase 1). Click a node to open it in the editor.",
+    "codeLegendEmpty": "No coding yet. Apply codes in Phase 3 — nodes will then be colored by their dominant category.",
+    "relayout": "Re-layout",
+    "relayoutTooltip": "Re-run the force layout from scratch (also resets manual node moves)",
+    "colorMode": {
+      "label": "Color",
+      "uniform": "Uniform",
+      "code": "Code",
+      "degree": "Degree",
+      "codeLegendTitle": "Category (dominant code)",
+      "degreeLegendTitle": "Link degree (in + out)",
+      "degreeHint": "Fragments with more links shift toward warm colors — useful to spot hubs at a glance."
+    }
+  },
+  "phase3": {
+    "importFragments": "From fragments",
+    "importTooltip": "Bring fragments from Phase 1 into the QDA workspace",
+    "modal": {
+      "title": "Bring fragments into QDA",
+      "subtitle": "Selected fragments will be added as files for analysis",
+      "search": "Search...",
+      "alreadyImported": "(already imported)",
+      "empty": "Please create fragments in Phase 1 first",
+      "noResults": "No matching fragments",
+      "importAll": "Import all (unimported only)",
+      "cancel": "Cancel",
+      "importSelected": "Import {{count}} selected",
+      "close": "Close"
+    }
+  },
+  "phase4": {
+    "empty": {
+      "title": "Phase 4: Ethnography",
+      "description": "Reorder sections in the binder and weave Phase 1 fragments together into long-form writing.",
+      "createFirst": "+ Create your first document"
+    },
+    "topbar": {
+      "newDocument": "+ New",
+      "compile": "Compile",
+      "delete": "Delete",
+      "deleteConfirm": "Delete document \"{{title}}\"?",
+      "selectPrompt": "Pick a document from the tabs above, or click \"+ New\"",
+      "titlePlaceholder": "Title"
+    },
+    "compile": {
+      "title": "Compile result",
+      "stripLinks": "Expand [[links]] to plain text",
+      "copy": "Copy to clipboard",
+      "download": "Download .md"
+    },
+    "binder": {
+      "title": "Binder",
+      "addSection": "+ Section",
+      "empty": "No sections.\nUse \"+ Section\" to add one.",
+      "deleteConfirm": "Delete section \"{{title}}\"?",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "delete": "Delete",
+      "hint": "Double-click to rename\n↑↓ to reorder",
+      "refCount": "Number of referenced fragments",
+      "newSection": "New section"
+    },
+    "editor": {
+      "selectPrompt": "Select a section from the binder on the left",
+      "sectionTitle": "Section title",
+      "placeholder": "Write this section...\n\nUse the fragment library on the right to insert content,\nor [[title]] to reference fragments inline.",
+      "referenced": "Referenced fragments ({{count}})",
+      "remove": "× Remove",
+      "removeTitle": "Remove this reference"
+    },
+    "library": {
+      "title": "Fragment library",
+      "search": "Search...",
+      "emptyNoFragments": "Fragments you create in Phase 1\nwill appear here",
+      "emptyNoMatch": "No matching fragments",
+      "insertContent": "Insert body",
+      "insertContentTitle": "Insert body as a blockquote",
+      "insertLink": "Link",
+      "insertLinkTitle": "Insert as [[wikilink]]",
+      "openInPhase1": "Open in Phase 1",
+      "emptyCell": "(empty)"
+    }
+  },
+  "splash": {
+    "appTitle": "fragments",
+    "tagline": "Writing — from fragments to links, analysis, and composition"
+  }
+}

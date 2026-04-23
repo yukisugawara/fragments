@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# fragments
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**エスノグラフィ（民族誌）のためのライティング環境 / A writing environment for ethnography**
 
-Currently, two official plugins are available:
+単一のウェブアプリで、**フィールドノート → つながり → コーディング → 民族誌**
+という書くプロセスの4つのフェーズを循環的に往復できるツールです。
+Obsidian 風の Markdown ノート、ネットワーク図、質的データ分析
+（minimal-qda ベース）、Scrivener 風のバインダーを 1 つの空間に統合し、
+理論に回収されない小さな断片も可視化して残す設計になっています。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> 社会学的な質的分析が「大きな理論の発見」を目指すのに対し、
+> エスノグラフィは理論からこぼれる断片のなかに現場の厚みを見出します。
+> 本アプリはその立場から設計されています。
 
-## React Compiler
+## 4 つのフェーズ
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| # | フェーズ | 役割 |
+|---|---|---|
+| 1 | **フィールドノート** (Fieldnotes) | Obsidian 風の Markdown エディタ。`[[リンク]]` / `![[埋め込み]]` / `![[image.png]]` / Callout / ハイライト / タグ / 脚注 |
+| 2 | **つながり** (Links) | 断片間リンクをグラフ可視化（@xyflow/react） |
+| 3 | **コーディング** (Coding) | 質的分析。テキスト断片と画像断片を同じカテゴリ体系でコーディング |
+| 4 | **民族誌** (Ethnography) | バインダー／コルクボード／分割ビュー。Markdown・PDF で書き出し |
 
-## Expanding the ESLint configuration
+画面左上のフェーズ切替ボタン（1/2/3/4）でいつでも循環的に往復できます。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 主な特徴
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **ローカルファースト**: データはすべてブラウザの localStorage に保存。
+  サーバーへのアップロードは一切なし
+- **Obsidian 流 Markdown** を Phase 1 プレビューで描画
+  （`==ハイライト==` / `#タグ` / `%% コメント %%` / `> [!note]` Callout / `[^1]` 脚注 ほか）
+- **画像埋め込み**: 断片にドラッグ＆ドロップ・ペースト・ボタンから画像を追加し、
+  `![[image.png]]` で引用。Phase 3 では画像ファイルをバウンディングボックスで
+  コーディング、Phase 4 の執筆・PDF 書き出しにも反映
+- **プロジェクト保存 / 読み込み**: 4 フェーズまとめて `.fragments.json` に
+  エクスポート可能
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 開発
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev    # http://localhost:5173/
+npm run build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 技術スタック
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+React 19 + Vite + TypeScript + Zustand + Tailwind CSS 4.2 +
+@xyflow/react + i18next + marked
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## サンプル
+
+「データ」メニュー → 「サンプルを読み込む」で、気候変動民族誌のサンプル
+（46 断片・7 画像・26 コード・民族誌 1 本）を一括ロードできます。
+**このサンプルは AI が生成した架空のデータ** で、実在の人物・場所とは関係ありません。
+
+## 背景
+
+本ツールは、Emerson, Fretz & Shaw *Writing Ethnographic Fieldnotes* (1995) の
+方法論と、菅原 (2026) 『人文学におけるデジタルツール活用の手引き』で整理された
+「書くプロセスの 5 ステップ」を下敷きにしています。
+MIT ライセンスの [minimal-qda](https://github.com/yukisugawara/minimal-qda)
+から派生しています。
+
+## License
+
+[MIT](./LICENSE)
