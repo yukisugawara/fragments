@@ -11,6 +11,9 @@ export type SupportedLang = (typeof SUPPORTED_LANGUAGES)[number];
 const STORAGE_KEY = 'fragments.lang';
 
 function resolveInitialLanguage(): SupportedLang {
+  // Always default to English. Only honour an explicit user choice saved
+  // previously; browser locale is intentionally ignored so first-time
+  // visitors land in the same (English) experience regardless of locale.
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && (SUPPORTED_LANGUAGES as readonly string[]).includes(saved)) {
@@ -19,10 +22,7 @@ function resolveInitialLanguage(): SupportedLang {
   } catch {
     // ignore (private mode / disabled storage)
   }
-  const navLang = typeof navigator !== 'undefined' ? navigator.language.slice(0, 2) : 'ja';
-  return (SUPPORTED_LANGUAGES as readonly string[]).includes(navLang)
-    ? (navLang as SupportedLang)
-    : 'ja';
+  return 'en';
 }
 
 // Merge the fragments-specific strings into each locale so components can
