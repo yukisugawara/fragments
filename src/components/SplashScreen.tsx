@@ -60,8 +60,8 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
 
   const tagline =
     lang === 'ja'
-      ? 'エスノグラフィのためのライティング環境'
-      : 'a writing environment for ethnography';
+      ? 'フィールドノート  ·  つながり  ·  コーディング  ·  民族誌'
+      : 'fieldnotes  ·  links  ·  coding  ·  ethnography';
 
   return (
     <div

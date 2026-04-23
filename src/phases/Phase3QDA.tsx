@@ -27,7 +27,7 @@ export function Phase3QDA() {
       {/* Floating button to import fragments as QDA files */}
       <button
         onClick={() => setShowFragmentImport(true)}
-        className="fixed left-4 bottom-4 z-40 flex items-center gap-2 px-3.5 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all text-sm font-semibold"
+        className="fixed left-[120px] bottom-4 z-40 flex items-center gap-2 px-3.5 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all text-sm font-semibold"
         title="フェーズ1で作成した断片を分析対象として取り込む"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
