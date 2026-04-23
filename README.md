@@ -2,6 +2,9 @@
 
 **エスノグラフィ（民族誌）のためのライティング環境 / A writing environment for ethnography**
 
+🌐 **公開デモ**: <https://fragments-iota.vercel.app>
+
+
 単一のウェブアプリで、**フィールドノート → つながり → コーディング → 民族誌**
 という書くプロセスの4つのフェーズを循環的に往復できるツールです。
 Obsidian 風の Markdown ノート、ネットワーク図、質的データ分析
