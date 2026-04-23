@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 /** Bounding box for image/PDF rectangle selection (relative ratios 0-1) */
 export interface BoundingBox {
@@ -141,7 +142,9 @@ export function nextFileId() {
   return `file-${++fileIdCounter}-${Date.now()}`;
 }
 
-export const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>()(
+  persist<AppState>(
+    (set) => ({
   files: [],
   activeFileId: null,
   codes: [],
@@ -421,4 +424,21 @@ export const useAppStore = create<AppState>((set) => ({
       localStorage.setItem('theme', next);
       return { theme: next };
     }),
-}));
+    }),
+    {
+      name: 'fragments-qda-store',
+      version: 1,
+      storage: createJSONStorage(() => localStorage),
+      // Persist only data, not ephemeral UI flags / menus / dialogs
+      partialize: (state) =>
+        ({
+          files: state.files,
+          activeFileId: state.activeFileId,
+          codes: state.codes,
+          memos: state.memos,
+          codeLinks: state.codeLinks,
+          theoryLabel: state.theoryLabel,
+        }) as unknown as AppState,
+    },
+  ),
+);
