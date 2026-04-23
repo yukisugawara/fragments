@@ -16,10 +16,13 @@ export function Phase1Fragments() {
   }, [activeFragmentId, fragments, setActive]);
 
   return (
-    <div className="h-full grid" style={{ gridTemplateColumns: '260px 1fr 1fr' }}>
+    <div
+      className="h-full grid grid-rows-1 min-h-0"
+      style={{ gridTemplateColumns: '260px 1fr 1fr' }}
+    >
       <FragmentList />
       <FragmentEditor />
-      <div className="border-l border-violet-200/60 dark:border-dpurple-700/60 overflow-hidden">
+      <div className="min-h-0 border-l border-violet-200/60 dark:border-dpurple-700/60 overflow-hidden">
         <FragmentPreview />
       </div>
     </div>
